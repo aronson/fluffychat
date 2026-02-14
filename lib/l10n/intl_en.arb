@@ -3496,5 +3496,27 @@
   "signUpGreeting": "FluffyChat is decentralized! Select a server where you want to create your account and let's go!",
   "signInGreeting": "You already have an account in Matrix? Welcome back! Select your homeserver and sign in.",
   "appIntro": "With FluffyChat you can chat with your friends. It's a secure decentralized [matrix] messenger! Learn more on https://matrix.org if you like or just sign up.",
-  "theProcessWasCanceled": "The process was canceled."
+  "theProcessWasCanceled": "The process was canceled.",
+  "importRoomKeys": "Import encryption keys",
+  "@importRoomKeys": {},
+  "importRoomKeysDescription": "Import Megolm session keys exported from another Matrix client",
+  "@importRoomKeysDescription": {},
+  "importRoomKeysSuccess": "Successfully imported {count} session keys",
+  "@importRoomKeysSuccess": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "enterKeyExportPassphrase": "Enter the passphrase used when exporting the keys",
+  "@enterKeyExportPassphrase": {},
+  "wrongPassphrase": "Wrong passphrase or corrupted file",
+  "@wrongPassphrase": {},
+  "exportRoomKeys": "Export encryption keys",
+  "@exportRoomKeys": {},
+  "exportRoomKeysDescription": "Export Megolm session keys to import into another Matrix client",
+  "@exportRoomKeysDescription": {},
+  "chooseKeyExportPassphrase": "Choose a passphrase to protect the exported keys",
+  "@chooseKeyExportPassphrase": {}
 }

@@ -145,6 +145,22 @@ class SettingsSecurityView extends StatelessWidget {
                       style: const TextStyle(fontFamily: 'RobotoMono'),
                     ),
                   ),
+                  ListTile(
+                    leading: const Icon(Icons.download_outlined),
+                    title: Text(L10n.of(context).importRoomKeys),
+                    subtitle: Text(
+                      L10n.of(context).importRoomKeysDescription,
+                    ),
+                    onTap: controller.importRoomKeysAction,
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.upload_outlined),
+                    title: Text(L10n.of(context).exportRoomKeys),
+                    subtitle: Text(
+                      L10n.of(context).exportRoomKeysDescription,
+                    ),
+                    onTap: controller.exportRoomKeysAction,
+                  ),
                   if (capabilities?.mChangePassword?.enabled != false ||
                       error != null)
                     ListTile(

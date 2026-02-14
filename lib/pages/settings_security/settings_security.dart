@@ -1,9 +1,14 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:matrix/matrix.dart';
 
 import 'package:fluffychat/config/setting_keys.dart';
 import 'package:fluffychat/l10n/l10n.dart';
+import 'package:fluffychat/utils/file_selector.dart';
+import 'package:fluffychat/utils/import_room_keys.dart';
 import 'package:fluffychat/widgets/adaptive_dialogs/show_ok_cancel_alert_dialog.dart';
 import 'package:fluffychat/widgets/adaptive_dialogs/show_text_input_dialog.dart';
 import 'package:fluffychat/widgets/app_lock.dart';
@@ -89,6 +94,82 @@ class SettingsSecurityController extends State<SettingsSecurity> {
         future: () => Matrix.of(context).client.logout(),
       );
     }
+  }
+
+  void importRoomKeysAction() async {
+    final files = await selectFiles(context);
+    if (files.isEmpty) return;
+
+    final passphrase = await showTextInputDialog(
+      useRootNavigator: false,
+      context: context,
+      title: L10n.of(context).importRoomKeys,
+      message: L10n.of(context).enterKeyExportPassphrase,
+      okLabel: L10n.of(context).importNow,
+      cancelLabel: L10n.of(context).cancel,
+      obscureText: true,
+      maxLines: 1,
+      minLines: 1,
+    );
+    if (passphrase == null || passphrase.isEmpty) return;
+
+    final fileBytes = Uint8List.fromList(await files.first.readAsBytes());
+
+    final result = await showFutureLoadingDialog(
+      context: context,
+      future: () => importRoomKeys(
+        Matrix.of(context).client,
+        fileBytes,
+        passphrase,
+      ),
+    );
+
+    if (!mounted) return;
+
+    if (!result.isError) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            L10n.of(context).importRoomKeysSuccess(result.result ?? 0),
+          ),
+        ),
+      );
+    }
+  }
+
+  void exportRoomKeysAction() async {
+    final passphrase = await showTextInputDialog(
+      useRootNavigator: false,
+      context: context,
+      title: L10n.of(context).exportRoomKeys,
+      message: L10n.of(context).chooseKeyExportPassphrase,
+      okLabel: L10n.of(context).ok,
+      cancelLabel: L10n.of(context).cancel,
+      obscureText: true,
+      maxLines: 1,
+      minLines: 1,
+    );
+    if (passphrase == null || passphrase.isEmpty) return;
+
+    final result = await showFutureLoadingDialog(
+      context: context,
+      future: () => exportRoomKeys(
+        Matrix.of(context).client,
+        passphrase,
+      ),
+    );
+
+    if (!mounted) return;
+    if (result.isError) return;
+
+    final bytes = result.result;
+    if (bytes == null) return;
+
+    await FilePicker.platform.saveFile(
+      dialogTitle: L10n.of(context).exportRoomKeys,
+      fileName: 'element-keys.txt',
+      bytes: bytes,
+    );
   }
 
   Future<void> dehydrateAction() => Matrix.of(context).dehydrateAction(context);

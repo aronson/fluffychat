@@ -395,7 +395,9 @@ class InputBar extends StatelessWidget {
         controller: controller,
         focusNode: focusNode,
         readOnly: readOnly,
-        contextMenuBuilder: (c, e) => markdownContextBuilder(c, e, controller),
+        contextMenuBuilder: (c, e) => SystemContextMenu.isSupported(c)
+            ? SystemContextMenu.editableText(editableTextState: e)
+            : markdownContextBuilder(c, e, controller),
         contentInsertionConfiguration: ContentInsertionConfiguration(
           onContentInserted: (KeyboardInsertedContent content) {
             final data = content.data;
